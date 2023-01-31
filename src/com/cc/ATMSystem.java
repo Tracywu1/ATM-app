@@ -67,7 +67,7 @@ public class ATMSystem {
                     //判断当前账户对象的密码是否与用户输入的一致
                     if (acc.getPassWord().equals(passWord)) {
                         //登录成功
-                        String appellation = acc.getSex().equals("女") ? "女士" : "先生";
+                        String appellation = "女".equals(acc.getSex()) ? "女士" : "先生";
                         System.out.println("恭喜您，" + acc.getUserName() + appellation + "，您已登录成功！");
                         //跳入下一个界面
                         showUserCommand(sc, acc, accounts);
@@ -148,7 +148,8 @@ public class ATMSystem {
         System.out.println("===============用户销户操作===============");
         System.out.println("您真的要销户吗？y/n");
         String rs = sc.next();
-        if (rs.equals("y")) {//真正的销户
+        if ("y".equals(rs)) {
+            //真正的销户
             //从当前账户集合中，删除当前账户对象，销毁完成
             if (acc.getBalance() > 0) {
                 System.out.println("您账户的余额为" + acc.getBalance() + "元，不允许进行销户操作");
@@ -302,7 +303,6 @@ public class ATMSystem {
                 showAccount(acc);
             }
         }
-        return;
     }
 
     /**
@@ -352,9 +352,18 @@ public class ATMSystem {
         String userName = sc.next();
         account.setUserName(userName);
 
-        System.out.println("请您输入您的性别：");
-        String sex = sc.next();
-        account.setSex(sex);
+        String appellation = null;
+        while (true) {
+            System.out.println("请您输入您的性别：");
+            String sex = sc.next();
+            if ("女".equals(sex) || "男".equals(sex)) {
+                appellation = "女".equals(sex) ? "女士" : "先生";
+                account.setSex(sex);
+                break;
+            } else {
+                System.out.println("您输入的性别名称错误,请重新输入！");
+            }
+        }
 
         while (true) {
             System.out.println("请您输入账户密码：");
@@ -370,9 +379,16 @@ public class ATMSystem {
             }
         }
 
-        System.out.println("请您输入账户当次限额：");
-        double quotaMoney = sc.nextDouble();
-        account.setQuotaMoney(quotaMoney);
+        while (true) {
+            System.out.println("请您输入账户当次限额：");
+            double quotaMoney = sc.nextDouble();
+            if (quotaMoney > 0) {
+                account.setQuotaMoney(quotaMoney);
+                break;
+            } else {
+                System.out.println("您输入的限额小于0，请重新输入！");
+            }
+        }
 
         //为账户随机一个8位且与其他账户的卡号不重复的号码（独立成方法）
         String cardId = getRandomCardId(accounts);
@@ -380,7 +396,6 @@ public class ATMSystem {
 
         //3.把账户对象添加到账户集合中去
         accounts.add(account);
-        String appellation = sex.equals("女") ? "女士" : "先生";
         System.out.println("恭喜您，" + userName + appellation + "，您已开户成功，" + "您的卡号是：" + cardId);
     }
 
