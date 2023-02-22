@@ -306,7 +306,7 @@ public class ATMSystem {
     }
 
     /**
-     * 存钱改变
+     * 存钱功能
      *
      * @param acc 当前账户对象
      * @param sc  扫描器
